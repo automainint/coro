@@ -1,0 +1,11 @@
+Checks: >
+  *,
+  -llvmlibc-*,
+  -fuchsia-*,
+  -altera-*,
+  -readability-identifier-length,
+  -google-runtime-int,
+  -*-uppercase-literal-suffix,
+  -*-braces-around-statements,
+  -*-namespace-comment,
+  -*-namespace-comments

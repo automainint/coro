@@ -1,0 +1,14 @@
+BasedOnStyle: LLVM
+UseTab: Never
+TabWidth: 2
+IndentWidth: 2
+
+Language: Cpp
+Standard: c++20
+
+ColumnLimit: 70
+NamespaceIndentation: All
+FixNamespaceComments: false
+SpaceInEmptyBlock: true
+SpaceBeforeCpp11BracedList: true
+Cpp11BracedListStyle: false
