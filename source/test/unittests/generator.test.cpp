@@ -15,6 +15,7 @@ namespace coro::test {
     int value = 1;
     for (auto n : range(1, 6))
       REQUIRE(n == value++);
+    REQUIRE(value == 6);
   }
 
   TEST_CASE("generator call", "[generator]") {
@@ -37,7 +38,7 @@ namespace coro::test {
     auto range = [](int begin, int end) -> generator<int> {
       for (int i = begin; i < end; i++)
         co_yield i;
-      co_return end;
+      co_yield end;
     };
 
     auto gen = range(1, 6);
@@ -55,7 +56,7 @@ namespace coro::test {
     auto range = [](int begin, int end) -> generator<int> {
       for (int i = begin; i < end; i++)
         co_yield i;
-      co_return 0;
+      co_yield 0;
     };
 
     auto foo = [&]() -> task<int> {
@@ -91,7 +92,7 @@ namespace coro::test {
     auto range = [](int begin, int end) -> generator<int> {
       for (int i = begin; i < end; i++)
         co_yield i;
-      co_return 0;
+      co_yield 0;
     };
     auto foo = range(1, 6);
     auto bar = std::move(foo);
@@ -111,7 +112,7 @@ namespace coro::test {
     auto range = [](int begin, int end) -> generator<int> {
       for (int i = begin; i < end; i++)
         co_yield i;
-      co_return 0;
+      co_yield 0;
     };
     auto foo = range(1, 6);
     auto bar = decltype(foo) { foo };
@@ -146,7 +147,7 @@ namespace coro::test {
     auto range = [](int begin, int end) -> generator<int> {
       for (int i = begin; i < end; i++)
         co_yield i;
-      co_return end;
+      co_yield end;
     };
 
     auto foo = [&](int first, int second,

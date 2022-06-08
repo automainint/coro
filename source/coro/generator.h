@@ -8,22 +8,21 @@
 #include "utils.h"
 
 namespace coro {
-  template <typename type_>
-  struct generator {
+  template <typename type_> struct generator {
     struct promise_type {
       using handle_type = std::coroutine_handle<promise_type>;
 
-      type_              m_value     = {};
-      int                m_ref_count = 0;
+      type_ m_value = {};
+      int m_ref_count = 0;
       std::exception_ptr m_exception = nullptr;
-      handle_type        m_pending   = nullptr;
+      bool m_continue = false;
+      handle_type m_pending = nullptr;
 
       auto initial_suspend() noexcept;
       auto final_suspend() noexcept;
       auto get_return_object() noexcept;
       auto unhandled_exception() noexcept;
-      void return_value(type_ const &value) noexcept;
-      void return_value(type_ &&value) noexcept;
+      void return_void() noexcept;
       auto yield_value(type_ const &value) noexcept;
       auto yield_value(type_ &&value) noexcept;
       auto yield_value(generator<type_> gen) noexcept;

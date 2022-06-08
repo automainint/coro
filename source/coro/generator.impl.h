@@ -30,21 +30,14 @@ namespace coro {
   }
 
   template <typename type_>
-  inline void generator<type_>::promise_type::return_value(
-      type_ const &value) noexcept {
-    m_value = value;
-  }
-
-  template <typename type_>
-  inline void generator<type_>::promise_type::return_value(
-      type_ &&value) noexcept {
-    m_value = std::move(value);
+  inline void generator<type_>::promise_type::return_void() noexcept {
   }
 
   template <typename type_>
   inline auto generator<type_>::promise_type::yield_value(
       type_ const &value) noexcept {
     m_value = value;
+    m_continue = false;
     return std::suspend_always {};
   }
 
@@ -52,6 +45,7 @@ namespace coro {
   inline auto generator<type_>::promise_type::yield_value(
       type_ &&value) noexcept {
     m_value = std::move(value);
+    m_continue = false;
     return std::suspend_always {};
   }
 
@@ -65,20 +59,20 @@ namespace coro {
 
   template <typename type_>
   inline generator<type_>::generator(generator const &other) noexcept
-      :
-      m_handle(other.m_handle) {
+      : m_handle(other.m_handle) {
     _acquire_handle(m_handle);
   }
 
   template <typename type_>
-  inline generator<type_>::generator(generator &&other) noexcept :
-      m_handle(std::move(other.m_handle)) {
+  inline generator<type_>::generator(generator &&other) noexcept
+      : m_handle(std::move(other.m_handle)) {
     other.m_handle = nullptr;
   }
 
   template <typename type_>
-  inline auto generator<type_>::operator=(
-      generator const &other) noexcept -> generator & {
+  inline auto
+  generator<type_>::operator=(generator const &other) noexcept
+      -> generator & {
     _release_handle(m_handle);
     m_handle = other.m_handle;
     _acquire_handle(m_handle);
@@ -89,14 +83,14 @@ namespace coro {
   inline auto generator<type_>::operator=(generator &&other) noexcept
       -> generator & {
     _release_handle(m_handle);
-    m_handle       = std::move(other.m_handle);
+    m_handle = std::move(other.m_handle);
     other.m_handle = nullptr;
     return *this;
   }
 
   template <typename type_>
-  inline generator<type_>::generator(handle_type handle) noexcept :
-      m_handle(handle) {
+  inline generator<type_>::generator(handle_type handle) noexcept
+      : m_handle(handle) {
     _acquire_handle(m_handle);
   }
 
@@ -111,8 +105,8 @@ namespace coro {
   }
 
   template <typename type_>
-  inline auto generator<type_>::await_suspend(
-      std::coroutine_handle<>) noexcept {
+  inline auto
+  generator<type_>::await_suspend(std::coroutine_handle<>) noexcept {
     _resume(m_handle);
     return false;
   }
@@ -133,8 +127,7 @@ namespace coro {
     return std::default_sentinel;
   }
 
-  template <typename type_>
-  inline auto generator<type_>::next() {
+  template <typename type_> inline auto generator<type_>::next() {
     _resume(m_handle);
     return _get_value(m_handle);
   }

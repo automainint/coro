@@ -8,15 +8,15 @@
 #include <iterator>
 
 namespace coro {
-  template <typename type_ = void>
-  struct task {
+  template <typename type_ = void> struct task {
     struct promise_type {
       using handle_type = std::coroutine_handle<promise_type>;
 
-      type_              m_value     = {};
-      int                m_ref_count = 0;
+      type_ m_value = {};
+      int m_ref_count = 0;
       std::exception_ptr m_exception = nullptr;
-      handle_type        m_pending   = nullptr;
+      bool m_continue = false;
+      handle_type m_pending = nullptr;
 
       auto initial_suspend() noexcept;
       auto final_suspend() noexcept;
@@ -38,7 +38,7 @@ namespace coro {
     ~task() noexcept;
 
     [[nodiscard]] auto await_ready() const noexcept;
-    auto               await_resume();
+    auto await_resume();
 
     auto await_suspend(std::coroutine_handle<>) noexcept;
     auto await_suspend(handle_type handle) noexcept;
@@ -53,14 +53,14 @@ namespace coro {
     handle_type m_handle;
   };
 
-  template <>
-  struct task<void> {
+  template <> struct task<void> {
     struct promise_type {
       using handle_type = std::coroutine_handle<promise_type>;
 
-      int                m_ref_count = 0;
+      int m_ref_count = 0;
       std::exception_ptr m_exception = nullptr;
-      handle_type        m_pending   = nullptr;
+      bool m_continue = false;
+      handle_type m_pending = nullptr;
 
       auto initial_suspend() noexcept;
       auto final_suspend() noexcept;
@@ -81,7 +81,7 @@ namespace coro {
     ~task() noexcept;
 
     [[nodiscard]] auto await_ready() const noexcept;
-    auto               await_resume();
+    auto await_resume();
 
     auto await_suspend(std::coroutine_handle<>) noexcept;
     auto await_suspend(handle_type handle) noexcept;

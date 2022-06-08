@@ -131,7 +131,50 @@ namespace coro::test {
     REQUIRE(thrown_value == 4);
   }
 
-  TEST_CASE("task void nested await", "[task]") {
+  TEST_CASE("task void nested await 1", "[task]") {
+    bool foo_flag = false;
+    bool bar_flag = false;
+
+    auto foo = [&]() -> task<> {
+      foo_flag = true;
+      co_return;
+    };
+
+    auto bar = [&]() -> task<> {
+      co_await foo();
+      bar_flag = true;
+    };
+
+    auto bus = bar();
+    bus.resume();
+    REQUIRE(foo_flag);
+    REQUIRE(bar_flag);
+  }
+
+  TEST_CASE("task void nested await 2", "[task]") {
+    bool foo_flag = false;
+    bool bar_flag = false;
+
+    auto foo = [&]() -> task<> {
+      co_yield std::default_sentinel;
+      foo_flag = true;
+    };
+
+    auto bar = [&]() -> task<> {
+      co_await foo();
+      bar_flag = true;
+    };
+
+    auto bus = bar();
+    bus.resume();
+    REQUIRE(!foo_flag);
+    REQUIRE(!bar_flag);
+    bus.resume();
+    REQUIRE(foo_flag);
+    REQUIRE(bar_flag);
+  }
+
+  TEST_CASE("task void nested await 3", "[task]") {
     bool foo_1 = false;
     bool foo_2 = false;
     bool bar_1 = false;
@@ -142,6 +185,7 @@ namespace coro::test {
       co_yield std::default_sentinel;
       foo_2 = true;
     };
+
     auto bar = [&]() -> task<> {
       bar_1 = true;
       co_yield std::default_sentinel;
@@ -177,6 +221,7 @@ namespace coro::test {
       foo_2 = true;
       co_return 7;
     };
+
     auto bar = [&]() -> task<int> {
       bar_1 = true;
       co_yield std::default_sentinel;

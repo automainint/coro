@@ -6,19 +6,19 @@
 
 namespace coro {
   template <promise_not_shared promise_>
-  inline void _acquire_handle(
-      std::coroutine_handle<promise_>) noexcept { }
+  inline void
+  _acquire_handle(std::coroutine_handle<promise_>) noexcept { }
 
   template <promise_shared promise_>
-  inline void _acquire_handle(
-      std::coroutine_handle<promise_> handle) noexcept {
+  inline void
+  _acquire_handle(std::coroutine_handle<promise_> handle) noexcept {
     if (handle)
       handle.promise().m_ref_count++;
   }
 
   template <promise_not_shared promise_>
-  inline void _release_handle(
-      std::coroutine_handle<promise_>) noexcept { }
+  inline void
+  _release_handle(std::coroutine_handle<promise_>) noexcept { }
 
   template <promise_shared promise_>
     requires(!promise_nested<promise_>)
@@ -32,8 +32,8 @@ namespace coro {
   }
 
   template <promise_nested promise_>
-  inline void _release_handle(
-      std::coroutine_handle<promise_> handle) noexcept {
+  inline void
+  _release_handle(std::coroutine_handle<promise_> handle) noexcept {
     if (!handle)
       return;
     if (--handle.promise().m_ref_count != 0)
@@ -63,7 +63,6 @@ namespace coro {
       std::rethrow_exception(handle.promise().m_exception);
     return true;
   }
-
   template <promise_nested promise_>
   inline auto _resume(std::coroutine_handle<promise_> handle)
       -> bool {
@@ -75,19 +74,20 @@ namespace coro {
       _release_handle(handle.promise().m_pending);
       handle.promise().m_pending = nullptr;
     }
+    handle.promise().m_continue = true;
     handle.resume();
     if (handle.promise().m_exception)
       std::rethrow_exception(handle.promise().m_exception);
-    return true;
+    return !handle.promise().m_continue;
   }
 
   template <promise_basic promise_>
-  inline auto _is_done(
-      std::coroutine_handle<promise_> handle) noexcept {
+  inline auto
+  _is_done(std::coroutine_handle<promise_> handle) noexcept {
     return handle && handle.done();
   }
 
-  template <promise_returning promise_>
+  template <promise_value promise_>
     requires(!promise_nested<promise_>)
   inline auto _get_value(std::coroutine_handle<promise_> handle) {
     if (!handle)
@@ -97,7 +97,7 @@ namespace coro {
     return std::move(handle.promise().m_value);
   }
 
-  template <promise_returning promise_>
+  template <promise_value promise_>
     requires(promise_nested<promise_>)
   inline auto _get_value(std::coroutine_handle<promise_> handle) {
     if (!handle)
