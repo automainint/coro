@@ -15,7 +15,7 @@ endif()
 project(
   ${CORO_PROJECT}
   VERSION 0.1.1
-  DESCRIPTION "Universal data container"
+  DESCRIPTION "Coroutine library"
   LANGUAGES CXX)
 
 add_library(${CORO_LIBRARY} STATIC)
