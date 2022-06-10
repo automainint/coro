@@ -127,7 +127,7 @@ namespace coro {
   }
 
   template <typename return_type_>
-  inline auto task<return_type_>::get() noexcept {
+  inline auto task<return_type_>::get() {
     return _get_value(m_handle);
   }
 

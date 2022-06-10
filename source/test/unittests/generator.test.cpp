@@ -6,7 +6,7 @@
 #include <catch2/catch.hpp>
 
 namespace coro::test {
-  TEST_CASE("generator for", "[generator]") {
+  TEST_CASE("generator for") {
     auto range = [](int begin, int end) -> generator<int> {
       for (int i = begin; i < end; i++)
         co_yield i;
@@ -18,7 +18,7 @@ namespace coro::test {
     REQUIRE(value == 6);
   }
 
-  TEST_CASE("generator call", "[generator]") {
+  TEST_CASE("generator call") {
     auto range = [](int begin, int end) -> generator<int> {
       for (int i = begin; i < end; i++)
         co_yield i;
@@ -34,7 +34,7 @@ namespace coro::test {
     REQUIRE(gen.next() == 5);
   }
 
-  TEST_CASE("generator return", "[generator]") {
+  TEST_CASE("generator return") {
     auto range = [](int begin, int end) -> generator<int> {
       for (int i = begin; i < end; i++)
         co_yield i;
@@ -52,7 +52,7 @@ namespace coro::test {
     REQUIRE(gen.next() == 6);
   }
 
-  TEST_CASE("generator await 1", "[generator]") {
+  TEST_CASE("generator await 1") {
     auto range = [](int begin, int end) -> generator<int> {
       for (int i = begin; i < end; i++)
         co_yield i;
@@ -70,7 +70,7 @@ namespace coro::test {
     REQUIRE(foo().run() == 15);
   }
 
-  TEST_CASE("generator await 2", "[generator]") {
+  TEST_CASE("generator await 2") {
     auto foo = [](int begin) -> task<int> {
       co_return begin * 3 - 1;
     };
@@ -88,7 +88,7 @@ namespace coro::test {
     REQUIRE(bar.next() == 4);
   }
 
-  TEST_CASE("generator move", "[generator]") {
+  TEST_CASE("generator move") {
     auto range = [](int begin, int end) -> generator<int> {
       for (int i = begin; i < end; i++)
         co_yield i;
@@ -108,7 +108,7 @@ namespace coro::test {
     REQUIRE(bar.next() == 0);
   }
 
-  TEST_CASE("generator copy", "[generator]") {
+  TEST_CASE("generator copy") {
     auto range = [](int begin, int end) -> generator<int> {
       for (int i = begin; i < end; i++)
         co_yield i;
@@ -129,7 +129,7 @@ namespace coro::test {
     REQUIRE(bar.next() == 0);
   }
 
-  TEST_CASE("generator exception", "[generator]") {
+  TEST_CASE("generator exception") {
     auto foo = []() -> generator<int> {
       throw 2;
       co_yield 1;
@@ -143,7 +143,7 @@ namespace coro::test {
     REQUIRE(thrown_value == 2);
   }
 
-  TEST_CASE("generator nested", "[generator]") {
+  TEST_CASE("generator nested") {
     auto range = [](int begin, int end) -> generator<int> {
       for (int i = begin; i < end; i++)
         co_yield i;
@@ -174,5 +174,21 @@ namespace coro::test {
 
     REQUIRE(gen.next() == 9);
     REQUIRE(gen.next() == 9);
-  };
+  }
+
+  TEST_CASE("generator noop resume") {
+    auto foo = []() -> generator<int> { co_return; };
+
+    auto gen = foo();
+    gen.resume();
+    REQUIRE(gen.is_done());
+  }
+
+  TEST_CASE("generator resume and get") {
+    auto foo = []() -> generator<int> { co_yield 42; };
+
+    auto gen = foo();
+    gen.resume();
+    REQUIRE(gen.get() == 42);
+  }
 }

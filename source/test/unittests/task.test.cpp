@@ -5,12 +5,12 @@
 #include <catch2/catch.hpp>
 
 namespace coro::test {
-  TEST_CASE("task return", "[task]") {
+  TEST_CASE("task return") {
     auto foo = []() -> task<int> { co_return 42; };
     REQUIRE(foo().run() == 42);
   }
 
-  TEST_CASE("task void", "[task]") {
+  TEST_CASE("task void") {
     bool run = false;
 
     auto foo = [&]() -> task<> {
@@ -24,7 +24,7 @@ namespace coro::test {
     REQUIRE(run);
   }
 
-  TEST_CASE("task await", "[task]") {
+  TEST_CASE("task await") {
     bool run = false;
 
     auto foo = [&]() -> task<> {
@@ -40,14 +40,14 @@ namespace coro::test {
     REQUIRE(run);
   }
 
-  TEST_CASE("task nested", "[task]") {
+  TEST_CASE("task nested") {
     auto foo = [&]() -> task<int> { co_return 42; };
     auto bar = [&]() -> task<int> { co_return co_await foo(); };
 
     REQUIRE(bar().run() == 42);
   }
 
-  TEST_CASE("task int await sentinel", "[task]") {
+  TEST_CASE("task int await sentinel") {
     auto foo = [&]() -> task<int> {
       co_await std::suspend_always {};
       co_return 5;
@@ -60,7 +60,7 @@ namespace coro::test {
     REQUIRE(bar.get() == 5);
   }
 
-  TEST_CASE("task void yield sentinel", "[task]") {
+  TEST_CASE("task void yield sentinel") {
     bool run = false;
     auto foo = [&]() -> task<> {
       co_yield std::default_sentinel;
@@ -73,7 +73,7 @@ namespace coro::test {
     REQUIRE(run);
   }
 
-  TEST_CASE("task move copy 1", "[task]") {
+  TEST_CASE("task move copy 1") {
     auto foo = []() -> task<int> { co_return 42; };
 
     auto a = foo();
@@ -88,7 +88,7 @@ namespace coro::test {
     REQUIRE(b.is_done());
   }
 
-  TEST_CASE("task move copy 2", "[task]") {
+  TEST_CASE("task move copy 2") {
     auto foo = []() -> task<> { co_return; };
 
     auto a = foo();
@@ -103,7 +103,7 @@ namespace coro::test {
     REQUIRE(b.is_done());
   }
 
-  TEST_CASE("task exception 1", "[task]") {
+  TEST_CASE("task exception 1") {
     auto foo = []() -> task<int> {
       throw 3;
       co_return 1;
@@ -117,7 +117,7 @@ namespace coro::test {
     REQUIRE(thrown_value == 3);
   }
 
-  TEST_CASE("task exception 2", "[task]") {
+  TEST_CASE("task exception 2") {
     auto foo = []() -> task<> {
       throw 4;
       co_return;
@@ -131,7 +131,7 @@ namespace coro::test {
     REQUIRE(thrown_value == 4);
   }
 
-  TEST_CASE("task void nested await 1", "[task]") {
+  TEST_CASE("task void nested await 1") {
     bool foo_flag = false;
     bool bar_flag = false;
 
@@ -151,7 +151,7 @@ namespace coro::test {
     REQUIRE(bar_flag);
   }
 
-  TEST_CASE("task void nested await 2", "[task]") {
+  TEST_CASE("task void nested await 2") {
     bool foo_flag = false;
     bool bar_flag = false;
 
@@ -174,7 +174,7 @@ namespace coro::test {
     REQUIRE(bar_flag);
   }
 
-  TEST_CASE("task void nested await 3", "[task]") {
+  TEST_CASE("task void nested await 3") {
     bool foo_1 = false;
     bool foo_2 = false;
     bool bar_1 = false;
@@ -209,7 +209,7 @@ namespace coro::test {
     REQUIRE(bar_2);
   }
 
-  TEST_CASE("task int nested await", "[task]") {
+  TEST_CASE("task int nested await") {
     bool foo_1 = false;
     bool foo_2 = false;
     bool bar_1 = false;

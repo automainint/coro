@@ -133,7 +133,12 @@ namespace coro {
   }
 
   template <typename type_>
-  inline auto generator<type_>::get() noexcept {
+  inline auto generator<type_>::resume() noexcept {
+    _resume(m_handle);
+  }
+
+  template <typename type_>
+  inline auto generator<type_>::get() {
     return _get_value(m_handle);
   }
 

@@ -46,7 +46,8 @@ namespace coro {
     [[nodiscard]] auto end() noexcept;
 
     [[nodiscard]] auto next();
-    [[nodiscard]] auto get() noexcept;
+    [[nodiscard]] auto resume() noexcept;
+    [[nodiscard]] auto get();
     [[nodiscard]] auto is_done() noexcept;
 
   private:

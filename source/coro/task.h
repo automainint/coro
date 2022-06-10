@@ -46,7 +46,7 @@ namespace coro {
     void resume() noexcept;
 
     [[nodiscard]] auto run();
-    [[nodiscard]] auto get() noexcept;
+    [[nodiscard]] auto get();
     [[nodiscard]] auto is_done() const noexcept;
 
   private:
