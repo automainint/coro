@@ -7,6 +7,7 @@ FetchContent_Declare(
   coro
   GIT_REPOSITORY https://github.com/automainint/coro.git
   GIT_TAG dev)
+set(CORO_ENABLE_TESTING OFF)
 FetchContent_MakeAvailable(coro)
 
 add_executable(${NAME})

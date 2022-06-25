@@ -5,6 +5,7 @@
 #define CORO_GENERATOR_H
 
 #include "iterator.h"
+#include "memory.h"
 #include "utils.h"
 
 namespace coro {
@@ -26,6 +27,9 @@ namespace coro {
       auto yield_value(type_ const &value) noexcept;
       auto yield_value(type_ &&value) noexcept;
       auto yield_value(generator<type_> gen) noexcept;
+
+      [[nodiscard]] static auto operator new(size_t size) -> void *;
+      static void operator delete(void *p);
     };
 
     using handle_type = typename promise_type::handle_type;

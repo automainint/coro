@@ -4,6 +4,7 @@
 #ifndef CORO_TASK_H
 #define CORO_TASK_H
 
+#include "memory.h"
 #include "utils.h"
 #include <iterator>
 
@@ -25,6 +26,9 @@ namespace coro {
       void return_value(type_ const &_value) noexcept;
       void return_value(type_ &&_value) noexcept;
       auto yield_value(std::default_sentinel_t) noexcept;
+
+      [[nodiscard]] static auto operator new(size_t size) -> void *;
+      static void operator delete(void *p);
     };
 
     using handle_type = typename promise_type::handle_type;
@@ -68,6 +72,9 @@ namespace coro {
       auto unhandled_exception() noexcept;
       void return_void() noexcept;
       auto yield_value(std::default_sentinel_t) noexcept;
+
+      [[nodiscard]] static auto operator new(size_t size) -> void *;
+      static void operator delete(void *p);
     };
 
     using handle_type = promise_type::handle_type;

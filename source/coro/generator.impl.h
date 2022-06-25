@@ -58,6 +58,19 @@ namespace coro {
   }
 
   template <typename type_>
+  inline auto
+  generator<type_>::promise_type::operator new(size_t size)
+      -> void * {
+    return allocate(size);
+  }
+
+  template <typename type_>
+  inline void
+  generator<type_>::promise_type::operator delete(void *p) {
+    deallocate(p);
+  }
+
+  template <typename type_>
   inline generator<type_>::generator(generator const &other) noexcept
       : m_handle(other.m_handle) {
     _acquire_handle(m_handle);
@@ -137,8 +150,7 @@ namespace coro {
     _resume(m_handle);
   }
 
-  template <typename type_>
-  inline auto generator<type_>::get() {
+  template <typename type_> inline auto generator<type_>::get() {
     return _get_value(m_handle);
   }
 

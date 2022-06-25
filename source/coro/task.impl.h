@@ -49,6 +49,19 @@ namespace coro {
   }
 
   template <typename return_type_>
+  inline auto
+  task<return_type_>::promise_type::operator new(size_t size)
+      -> void * {
+    return allocate(size);
+  }
+
+  template <typename return_type_>
+  inline void
+  task<return_type_>::promise_type::operator delete(void *p) {
+    deallocate(p);
+  }
+
+  template <typename return_type_>
   inline task<return_type_>::task(task const &other) noexcept
       : m_handle(other.m_handle) {
     _acquire_handle(m_handle);
@@ -159,6 +172,15 @@ namespace coro {
       std::default_sentinel_t) noexcept {
     m_continue = false;
     return std::suspend_always {};
+  }
+
+  inline auto task<void>::promise_type::operator new(size_t size)
+      -> void * {
+    return allocate(size);
+  }
+
+  inline void task<void>::promise_type::operator delete(void *p) {
+    deallocate(p);
   }
 
   inline task<void>::task(task const &other) noexcept
