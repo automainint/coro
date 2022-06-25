@@ -16,6 +16,7 @@ namespace coro {
     *reinterpret_cast<size_t *>(p) = size;
     return p + sizeof(size_t);
   }
+
   void deallocate(void *p) {
     auto *q = reinterpret_cast<std::byte *>(p) - sizeof(size_t);
     g_resource.deallocate(q, *reinterpret_cast<size_t *>(q));
