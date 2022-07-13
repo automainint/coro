@@ -58,10 +58,9 @@ namespace coro {
   }
 
   template <typename type_>
-  inline auto
-  generator<type_>::promise_type::operator new(size_t size)
-      -> void * {
-    return allocate(size);
+  inline auto generator<type_>::promise_type::operator new(
+      size_t size, std::pmr::memory_resource *resource) -> void * {
+    return allocate(resource, size);
   }
 
   template <typename type_>

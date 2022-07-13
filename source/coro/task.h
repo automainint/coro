@@ -27,7 +27,10 @@ namespace coro {
       void return_value(type_ &&_value) noexcept;
       auto yield_value(std::default_sentinel_t) noexcept;
 
-      [[nodiscard]] static auto operator new(size_t size) -> void *;
+      [[nodiscard]] static auto
+      operator new(size_t size, std::pmr::memory_resource *resource =
+                                    default_memory_resource())
+          -> void *;
       static void operator delete(void *p);
     };
 
@@ -73,7 +76,10 @@ namespace coro {
       void return_void() noexcept;
       auto yield_value(std::default_sentinel_t) noexcept;
 
-      [[nodiscard]] static auto operator new(size_t size) -> void *;
+      [[nodiscard]] static auto
+      operator new(size_t size, std::pmr::memory_resource *resource =
+                                    default_memory_resource())
+          -> void *;
       static void operator delete(void *p);
     };
 

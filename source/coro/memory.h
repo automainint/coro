@@ -5,9 +5,13 @@
 #define CORO_MEMORY_H
 
 #include <cstddef>
+#include <memory_resource>
 
 namespace coro {
-  [[nodiscard]] auto allocate(size_t size) -> void *;
+  [[nodiscard]] auto default_memory_resource()
+      -> std::pmr::memory_resource *;
+  [[nodiscard]] auto allocate(std::pmr::memory_resource *resource,
+                              size_t size) -> void *;
   void deallocate(void *p);
 }
 

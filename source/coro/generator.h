@@ -28,7 +28,10 @@ namespace coro {
       auto yield_value(type_ &&value) noexcept;
       auto yield_value(generator<type_> gen) noexcept;
 
-      [[nodiscard]] static auto operator new(size_t size) -> void *;
+      [[nodiscard]] static auto
+      operator new(size_t size, std::pmr::memory_resource *resource =
+                                    default_memory_resource())
+          -> void *;
       static void operator delete(void *p);
     };
 

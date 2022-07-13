@@ -49,10 +49,9 @@ namespace coro {
   }
 
   template <typename return_type_>
-  inline auto
-  task<return_type_>::promise_type::operator new(size_t size)
-      -> void * {
-    return allocate(size);
+  inline auto task<return_type_>::promise_type::operator new(
+      size_t size, std::pmr::memory_resource *resource) -> void * {
+    return allocate(resource, size);
   }
 
   template <typename return_type_>
@@ -174,9 +173,9 @@ namespace coro {
     return std::suspend_always {};
   }
 
-  inline auto task<void>::promise_type::operator new(size_t size)
-      -> void * {
-    return allocate(size);
+  inline auto task<void>::promise_type::operator new(
+      size_t size, std::pmr::memory_resource *resource) -> void * {
+    return allocate(resource, size);
   }
 
   inline void task<void>::promise_type::operator delete(void *p) {
