@@ -52,8 +52,9 @@ namespace coro {
     [[nodiscard]] auto begin() noexcept;
     [[nodiscard]] auto end() noexcept;
 
+    void resume() noexcept;
+
     [[nodiscard]] auto next();
-    [[nodiscard]] auto resume() noexcept;
     [[nodiscard]] auto get();
     [[nodiscard]] auto is_done() noexcept;
 

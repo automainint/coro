@@ -139,14 +139,14 @@ namespace coro {
     return std::default_sentinel;
   }
 
+  template <typename type_>
+  inline void generator<type_>::resume() noexcept {
+    _resume(m_handle);
+  }
+
   template <typename type_> inline auto generator<type_>::next() {
     _resume(m_handle);
     return _get_value(m_handle);
-  }
-
-  template <typename type_>
-  inline auto generator<type_>::resume() noexcept {
-    _resume(m_handle);
   }
 
   template <typename type_> inline auto generator<type_>::get() {
